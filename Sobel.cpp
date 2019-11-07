@@ -16,6 +16,7 @@ Mat calculateGradientDirection(Mat &dx, Mat &dy);
 
 Mat applyKernel(int kernel[3][3], Mat &originalImage);
 uchar normaliseUcharGray(float max, float min, int x);
+void imageWrite(Mat &image, std::string imagename);
 
 int main( int argc, char** argv )
 {
@@ -53,18 +54,19 @@ int main( int argc, char** argv )
     Mat magnitude = calculateGradientMagnitude(dxImage, dyImage);
     Mat direction = calculateGradientDirection(dxImage, dyImage);
 
-    Mat output = Mat(gray_image.size(), gray_image.type());
-
-    normalize(direction, output, 0, 255, cv::NORM_MINMAX);
-
-	// imwrite( "xGradient.jpg",  );
-    // imwrite( "yGradient.jpg", dyImage );
-    // imwrite( "gradient_magnitude.jpg", gradient );
-    // imwrite( "gradient_direction.jpg", direction );
-
-    imwrite( "output.jpg", output );
+    imageWrite(dxImage, "xGradient.jpg");
+    imageWrite(dyImage, "yGradient.jpg");
+    imageWrite(magnitude, "magnitudeGradient.jpg");
+    imageWrite(direction, "directionGradient.jpg");
 
     return 0;
+}
+
+void imageWrite(Mat &image, std::string imagename){
+    Mat output = Mat(image.size(), CV_BGR2GRAY);
+    normalize(image, output, 0, 255, cv::NORM_MINMAX);
+
+    imwrite(imagename, output);
 }
 
 Mat calculateGradientMagnitude(Mat &dx, Mat &dy) {
