@@ -1,67 +1,58 @@
-#include <stdio.h>
-#include "includes.h"
-
-#include <math.h>     
-#define _USE_MATH_DEFINES
+#include "Sobel.hpp"
 
 using namespace cv;
 
-Mat calculateGradientMagnitude(Mat &dx, Mat &dy);
-Mat calculateGradientDirection(Mat &dx, Mat &dy);
+// int main( int argc, char** argv )
+// {
+//     int dx[3][3] = {
+//         {-1, 0, 1},
+//         {-2, 0, 2},
+//         {-1, 0, 1}
+//     };
 
-Mat applyKernel(int kernel[3][3], Mat &originalImage);
-uchar normaliseUcharGray(float max, float min, int x);
-void imageWrite(Mat &image, std::string imagename);
+//     int dy[3][3] = {
+//         {-1, -2, -1},
+//         {0, 0, 0},
+//         {1, 2, 1}
+//     };
 
-int main( int argc, char** argv )
-{
-    int dx[3][3] = {
-        {-1, 0, 1},
-        {-2, 0, 2},
-        {-1, 0, 1}
-    };
+//     // LOADING THE IMAGE
+// 	char* imageName = argv[1];
 
-    int dy[3][3] = {
-        {-1, -2, -1},
-        {0, 0, 0},
-        {1, 2, 1}
-    };
+// 	Mat image;
+// 	image = imread( imageName, 1 );
 
-    // LOADING THE IMAGE
-	char* imageName = argv[1];
+// 	if( argc != 2 || !image.data )
+// 	{
+// 		printf( " No image data \n " );
+// 		return -1;
+// 	}
 
-	Mat image;
-	image = imread( imageName, 1 );
+// 	// CONVERT COLOUR, BLUR AND SAVE
+// 	Mat gray_image;
+// 	cvtColor( image, gray_image, CV_BGR2GRAY );
 
-	if( argc != 2 || !image.data )
-	{
-		printf( " No image data \n " );
-		return -1;
-	}
+//     Mat dxImage = applyKernel(dx, gray_image);
+//     Mat dyImage = applyKernel(dy, gray_image);
 
-	// CONVERT COLOUR, BLUR AND SAVE
-	Mat gray_image;
-	cvtColor( image, gray_image, CV_BGR2GRAY );
+//     Mat magnitude = calculateGradientMagnitude(dxImage, dyImage);
+//     Mat direction = calculateGradientDirection(dxImage, dyImage);
 
-    Mat dxImage = applyKernel(dx, gray_image);
-    Mat dyImage = applyKernel(dy, gray_image);
+//     imageWrite(dxImage, "xGradient.jpg");
+//     imageWrite(dyImage, "yGradient.jpg");
+//     imageWrite(magnitude, "magnitudeGradient.jpg");
+//     imageWrite(direction, "directionGradient.jpg");
 
-    Mat magnitude = calculateGradientMagnitude(dxImage, dyImage);
-    Mat direction = calculateGradientDirection(dxImage, dyImage);
+//     return 0;
+// }
 
-    imageWrite(dxImage, "xGradient.jpg");
-    imageWrite(dyImage, "yGradient.jpg");
-    imageWrite(magnitude, "magnitudeGradient.jpg");
-    imageWrite(direction, "directionGradient.jpg");
-
-    return 0;
-}
-
-void imageWrite(Mat &image, std::string imagename){
+Mat imageWrite(Mat &image, std::string imagename){
     Mat output = Mat(image.size(), CV_BGR2GRAY);
     normalize(image, output, 0, 255, cv::NORM_MINMAX);
 
     imwrite(imagename, output);
+
+    return output;
 }
 
 Mat calculateGradientMagnitude(Mat &dx, Mat &dy) {
