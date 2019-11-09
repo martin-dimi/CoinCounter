@@ -47,8 +47,8 @@ using namespace cv;
 // }
 
 Mat imageWrite(Mat &image, std::string imagename){
-    Mat output = Mat(image.size(), CV_BGR2GRAY);
-    normalize(image, output, 0, 255, cv::NORM_MINMAX);
+    Mat output = Mat(image.size(), image.type());
+    normalize(image, output, 0, 255, NORM_MINMAX);
 
     imwrite(imagename, output);
 
@@ -61,9 +61,10 @@ Mat calculateGradientMagnitude(Mat &dx, Mat &dy) {
 
      for(int x = 1; x < mag.rows - 1; x++) {	
 		for(int y = 1; y < mag.cols - 1; y++) {
-            float result = sqrt(pow(dx.at<float>(x,y), 2) + pow(dy.at<float>(x,y), 2));
+            float dxx = dx.at<float>(x,y);
+            float dyy = dy.at<float>(x,y);
 
-            mag.at<float>(x,y) = result;
+            mag.at<float>(x,y) =  sqrt(dxx*dxx + dyy*dyy);
         }
      }
 
@@ -76,7 +77,7 @@ Mat calculateGradientDirection(Mat &dx, Mat &dy) {
 
     for(int x = 1; x < dir.rows - 1; x++) {	
         for(int y = 1; y < dir.cols - 1; y++) {
-            int result = atan2(dy.at<float>(x,y),  dx.at<float>(x,y));
+            float result = atan2(dy.at<float>(x,y),  dx.at<float>(x,y));
 
             dir.at<float>(x,y) = result;
         }
@@ -91,7 +92,7 @@ Mat applyKernel(int kernel[3][3], Mat &originalImage) {
 
     for(int x = 1; x < originalImage.rows - 1; x++) {	
 		for(int y = 1; y < originalImage.cols - 1; y++) {
-			float result = 0;
+			float result = 0.0;
 
             for(int xOffset = -1; xOffset <= 1; xOffset++) {
                 for(int yOffset = -1; yOffset <= 1; yOffset++) {
