@@ -141,15 +141,15 @@ void calculateHough(Mat& magnitude, Mat& direction, int ***hough, int radiusMax)
                     hough[x0p][y0p][radius] += 1;
                 }
 
-                // X+ Y-
-                if(x0p >= 0 && x0p < rows && y0m >= 0 && y0m < cols) {
-                    hough[x0p][y0m][radius] += 1;
-                }
+                // // X+ Y-
+                // if(x0p >= 0 && x0p < rows && y0m >= 0 && y0m < cols) {
+                //     hough[x0p][y0m][radius] += 1;
+                // }
 
-                // X- Y+
-                if(x0m >= 0 && x0m < rows && y0p >= 0 && y0p < cols) {
-                    hough[x0m][y0p][radius] += 1;
-                }
+                // // X- Y+
+                // if(x0m >= 0 && x0m < rows && y0p >= 0 && y0p < cols) {
+                //     hough[x0m][y0p][radius] += 1;
+                // }
 
                 // X- Y-
                 if(x0m >= 0 && x0m < rows && y0m >= 0 && y0m < cols) {
